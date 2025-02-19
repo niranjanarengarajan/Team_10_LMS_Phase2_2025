@@ -1,10 +1,10 @@
 package com.runners;
 
-import org.junit.runner.RunWith;
-import io.cucumber.junit.Cucumber;
 
-import io.cucumber.junit.CucumberOptions;
-@RunWith(Cucumber.class)
+import org.testng.annotations.*;
+import io.cucumber.testng.AbstractTestNGCucumberTests;
+import io.cucumber.testng.CucumberOptions;
+
 @CucumberOptions(
 		features = {"src/test/resources/Features"}, //location of feature files
 		glue= {"com.stepdefenitions"},
@@ -13,7 +13,6 @@ import io.cucumber.junit.CucumberOptions;
 		
 		plugin = { 
 		"com.aventstack.chaintest.plugins.ChainTestCucumberListener:", 
-		"junit:target/cucumber-reports/Cucumber.xml",
 		"html:target/cucumber-reports/reports.html", 
 		"html:test-output/index.html",
 		"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"}, 
@@ -23,7 +22,7 @@ import io.cucumber.junit.CucumberOptions;
 		)
 		 
 
-public class TestRunner{
+public class TestRunner extends AbstractTestNGCucumberTests{
 
 
 }

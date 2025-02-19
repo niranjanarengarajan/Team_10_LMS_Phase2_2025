@@ -18,27 +18,38 @@
     <artifactId>cucumber-java</artifactId>
     <version>7.21.1</version>
 </dependency>
-<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-junit -->
+<!-- https://mvnrepository.com/artifact/org.testng/testng -->
+<dependency>
+    <groupId>org.testng</groupId>
+    <artifactId>testng</artifactId>
+    <version>7.11.0</version>
+    <scope>test</scope>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-testng -->
 <dependency>
     <groupId>io.cucumber</groupId>
-    <artifactId>cucumber-junit</artifactId>
+    <artifactId>cucumber-testng</artifactId>
     <version>7.21.1</version>
-    <scope>test</scope>
 </dependency>
-<!-- https://mvnrepository.com/artifact/junit/junit -->
+<!-- https://mvnrepository.com/artifact/io.cucumber/cucumber-picocontainer -->
 <dependency>
-    <groupId>junit</groupId>
-    <artifactId>junit</artifactId>
-    <version>4.13.2</version>
-    <scope>test</scope>
+    <groupId>io.cucumber</groupId>
+    <artifactId>cucumber-picocontainer</artifactId>
+    <version>7.21.1</version>
+</dependency>
+<!-- Allure dependencies -->
+<dependency>
+    <groupId>io.qameta.allure</groupId>
+    <artifactId>allure-testng</artifactId>
+    <version>2.29.0</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/io.qameta.allure/allure-cucumber-jvm -->
+<dependency>
+    <groupId>io.qameta.allure</groupId>
+    <artifactId>allure-cucumber-jvm</artifactId>
+    <version>2.20.1</version>
 </dependency>
 
-<!-- https://mvnrepository.com/artifact/io.github.bonigarcia/webdrivermanager -->
-<dependency>
-    <groupId>io.github.bonigarcia</groupId>
-    <artifactId>webdrivermanager</artifactId>
-    <version>5.9.3</version>
-</dependency>
 <!-- https://mvnrepository.com/artifact/com.aventstack/chaintest-cucumber-jvm -->
 <dependency>
     <groupId>com.aventstack</groupId>
@@ -51,6 +62,18 @@
     <groupId>org.apache.poi</groupId>
     <artifactId>poi</artifactId>
     <version>5.4.0</version>
+</dependency>
+<!-- Log4j 2 dependencies -->
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-core</artifactId>
+    <version>2.20.0</version>
+</dependency>
+
+<dependency>
+    <groupId>org.apache.logging.log4j</groupId>
+    <artifactId>log4j-api</artifactId>
+    <version>2.20.0</version>
 </dependency>
 
 
