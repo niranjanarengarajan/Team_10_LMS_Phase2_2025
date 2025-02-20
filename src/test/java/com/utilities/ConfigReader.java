@@ -1,5 +1,6 @@
 package com.utilities;
 
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,25 +9,23 @@ import java.util.Properties;
 import com.utilities.*;
 
 public class ConfigReader {
-	private static Properties properties;
-    private final static String propertyFilePath = "./src/test/resource/Config/config.properties";    
+    private static Properties properties = new Properties();
+    private static final String PROPERTY_FILE_PATH = "./src/test/resources/Config/Config.properties";
     
     
-    public static Properties readConfig() throws Throwable {
-        InputStream fis;
-        fis = ConfigReader.class.getClassLoader().getResourceAsStream(propertyFilePath);
-        properties = new Properties();
-        if (fis == null) {
-            throw new FileNotFoundException("Property file '" + propertyFilePath + "' not found in the classpath");
-        }
-        try {
-            properties.load(fis);
-            fis.close();
+    static {
+        try (InputStream inputStream = new FileInputStream(PROPERTY_FILE_PATH)) {
+            properties.load(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return properties;
-    } 
-   
+    }
 
+    public static String getBrowser() {
+        return properties.getProperty("browser");
+    }
+
+    public static String getUrl() {
+        return properties.getProperty("Url");
+    }
 }

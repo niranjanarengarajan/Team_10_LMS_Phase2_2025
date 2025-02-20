@@ -11,15 +11,10 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import com.utilities.ConfigReader;
 
 public class DriverFactory {
-	 // Thread-safe WebDriver instance
     private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
-    public static  ConfigReader configReader = new ConfigReader();
 
-
-    // Initialize WebDriver
-    public  WebDriver initializeWebDriver(String browser) {
-    	
-    	browser ="chrome";
+    public static WebDriver initializeWebDriver() {
+        String browser = ConfigReader.getBrowser();
         if (driver.get() == null) { // Ensure WebDriver is only initialized once per thread
             if (browser.equalsIgnoreCase("chrome")) {
 
@@ -67,7 +62,7 @@ public class DriverFactory {
     }
 
     // Close the WebDriver
-    public  void closeDriver() {
+    public static  void closeDriver() {
         if (driver.get() != null) {
         	driver.get().close();
         // driver.get().quit();

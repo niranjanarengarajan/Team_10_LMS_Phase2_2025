@@ -10,7 +10,6 @@ package com.utilities;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -201,35 +200,30 @@ public class ExcelReader {
 		}
 		return testData;
 	}
-	
+
 	@Test
 	public void DataDrivenTesting() {
-		
-		
+
 		Map<String, String> testData;
 		try {
-			//testData = getLoginData("Positive");
-			//testData=getProgramData("Negative");
-			testData=getBatchData("Positive");
-			
-			//testData=getClassData("Positive");
-			
-			
-			//System.out.println("testdata is "+testData.get("USER"));
-			//System.out.println("testdata is "+testData.get("PASSWORD"));
-			//System.out.println("testdata is "+testData.get("PROGRAM_NAME"));
-			System.out.println("testdata is "+testData.get("BPROGRAM_NAME"));
-			
-			//System.out.println("testdata is "+testData.get("CBATCH_NAME"));
-			
-			
+			testData = getLoginData("Positive");
+			// testData=getProgramData("Negative");
+			// testData=getBatchData("Positive");
+
+			// testData=getClassData("Positive");
+
+			System.out.println("testdata is "+testData.get("USER"));
+		 System.out.println("testdata is "+testData.get("PASSWORD"));
+			// System.out.println("testdata is "+testData.get("PROGRAM_NAME"));
+			System.out.println("testdata is " + testData.get("BPROGRAM_NAME"));
+
+			// System.out.println("testdata is "+testData.get("CBATCH_NAME"));
+
 		} catch (IOException e) {
-			
+
 			e.printStackTrace();
 		}
-		
-		
-	}
 
+	}
 
 }
