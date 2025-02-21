@@ -1,77 +1,58 @@
 package com.driverManager;
 
+import java.time.Duration;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxOptions;
 
-import com.utilities.ConfigReader;
+import org.openqa.selenium.edge.EdgeDriver;
+
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+import org.openqa.selenium.safari.SafariDriver;
+
+
 
 public class DriverFactory {
-	 // Thread-safe WebDriver instance
-    private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
-    public static  ConfigReader configReader = new ConfigReader();
+	private WebDriver driver;
 
+	 public WebDriver initialiseBrowser(String browserName) {
+	        if (driver == null) {
+	            switch (browserName.toLowerCase()) {
+	                case "chrome":
+	                   
+	                    driver = new ChromeDriver();
+	                    break;
+	                case "firefox":
+	                   
+	                    driver = new FirefoxDriver();
+	                    break;
+	                case "edge":
+	                    
+	                    driver = new EdgeDriver();
+	                    break;
+	                case "safari":
+	                    
+	                    driver = new SafariDriver();
+	                    break;
+	                default:
+	                    throw new IllegalArgumentException("Browser not supported: " + browserName);
+	            }
+	            driver.manage().window().maximize();
+	            driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+	        }
+	        return driver;
+	    }
+	 
+	 
+	   public WebDriver getDriver() {
+	        return driver;
+	    }
 
-    // Initialize WebDriver
-    public  WebDriver initializeWebDriver(String browser) {
-    	
-    	browser ="chrome";
-        if (driver.get() == null) { // Ensure WebDriver is only initialized once per thread
-            if (browser.equalsIgnoreCase("chrome")) {
-
-                ChromeOptions options = new ChromeOptions();
-               // options.addArguments("--headless"); // Enable headless mode
-               options.addArguments("--start-maximized"); // Maximize Chrome window
-                driver.set(new ChromeDriver(options));
-            } else if (browser.equalsIgnoreCase("firefox")) {
-                // WebDriverManager.firefoxdriver().setup();
-                FirefoxOptions options = new FirefoxOptions();
-               options.addArguments("--width=1920", "--height=1080"); // Maximize Firefox window
-                driver.set(new FirefoxDriver(options));
-               // options.addArguments("--headless"); // Enable headless mode
-             
-            } else if (browser.equalsIgnoreCase("edge")) {
-                //WebDriverManager.edgedriver().setup();
-                EdgeOptions options = new EdgeOptions();
-                options.addArguments("start-maximized"); // Maximize Edge window
-                driver.set(new EdgeDriver(options));
-               // options.addArguments("--headless"); // Enable headless mode
-             
-            } else {
-                throw new RuntimeException("Browser type not supported: " + browser);
-            }
-            // Common driver setup
-            driver.get().manage().window().maximize();
-        } else {
-            System.out.println("Driver is already initialized");
-        }
-        return driver.get();
-    }
-
-    // Get the WebDriver instance
-    public static WebDriver getDriver() {
-        if (driver.get() == null) {
-        	
-            throw new RuntimeException("WebDriver is not initialized. Please call initializeWebDriver() first.");
-            
-        }
-        return driver.get();
-    }
-    
-    public static ConfigReader configReader() {
-        return configReader();
-    }
-
-    // Close the WebDriver
-    public  void closeDriver() {
-        if (driver.get() != null) {
-        	driver.get().close();
-        // driver.get().quit();
-           // driver.remove(); // Removes driver from ThreadLocal to clean up resources
-        }
-    }
+	
+	   public void closeDriver() {
+	        if (driver != null) {
+	            driver.quit();
+	        }
+	    }
 }
