@@ -4,15 +4,14 @@ package com.hooks;
 import org.openqa.selenium.WebDriver;
 import io.cucumber.java.After;
 import io.cucumber.java.Before;
+
+import com.constants.EnvironmentConstants;
 import com.utilities.ConfigReader;
 import com.utilities.LoggerLoad;
 import com.utilities.TestContext;
 
 public class HooksClass {
     private WebDriver driver;
-    
-    
-    
     private TestContext testcontext;
 	private ConfigReader configreader; 
 	
@@ -22,18 +21,23 @@ public class HooksClass {
      this.configreader = new ConfigReader();
  }
  
- @Before
+// @Before
  public void setUp() {
      LoggerLoad.logInfo("Initializing WebDriver");
-     String browserName = configreader.browserType(); 
-     WebDriver driver = testcontext.getDriverFactory().initialiseBrowser(browserName); 
+     
+     ConfigReader propertiesConfig = new ConfigReader();
+	 propertiesConfig.load();  // To read values from Config.properties file
+	 
+     EnvironmentConstants constants = new EnvironmentConstants();
+     
+     WebDriver driver = testcontext.getDriverFactory().initialiseBrowser(constants.getBrowserType()); 
      testcontext.setDriver(driver); 
-     LoggerLoad.logInfo("Navigating to: " + configreader.getLmsPortalUrl());
-     testcontext.getDriver().get(configreader.getLmsPortalUrl());
+     LoggerLoad.logInfo("Navigating to: " + constants.getAppUrl());
+     testcontext.getDriver().get(constants.getAppUrl());
      
  }
 
- @After
+ //@After
  public void tearDown() {
      if (driver != null) {
          driver.quit();
