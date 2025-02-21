@@ -1,48 +1,53 @@
+/**********************************************************************
+Config Reader class is used to read values from Config.Properties 
+file and assign those read values to constants variables.
+Values are stored in Constants variables as ThreadLocal values 
+to make use of it globally and thread safe during parallel test execution.
+*************************************************************************/
 package com.utilities;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
 
-import com.utilities.*;
-
-
+import com.constants.EnvironmentConstants;
 
 public class ConfigReader {
-public static Properties properties;
-	
-	public  ConfigReader() {
-		File src = new File("./src/test/resources/Config/Config.properties");
+	private Properties properties = new Properties();
+	private EnvironmentConstants constants = new EnvironmentConstants();
 
-		try {
-			FileInputStream fis = new FileInputStream(src);
-			properties = new Properties();
-			properties.load(fis);
-		} catch (Exception e) {
-			System.out.println("Exception is " + e.getMessage());
+	// Load configuration data from properties file
+	public void load() {
+		try (FileInputStream inputStream = new FileInputStream(constants.PROPERTIES_FILE_PATH)) {
+			properties.load(inputStream);
+
+			// Set environment constants by calling helper method
+			loadConfigProperty("browser", (value) -> constants.setBrowserType(ThreadLocal.withInitial(() -> value)));
+			loadConfigProperty("appurl", (value) -> constants.setAppUrl(ThreadLocal.withInitial(() -> value)));
+			loadConfigProperty("username", (value) -> constants.setUsername(ThreadLocal.withInitial(() -> value)));
+			loadConfigProperty("password", (value) -> constants.setPassword(ThreadLocal.withInitial(() -> value)));
+			loadConfigProperty("role", (value) -> constants.setRole(ThreadLocal.withInitial(() -> value)));
+			loadConfigProperty("os", (value) -> constants.setOsType(ThreadLocal.withInitial(() -> value)));
+
+		} catch (IOException exception) {
+			exception.printStackTrace();
+			throw new RuntimeException("Failed to load configuration file", exception);
 		}
 	}
 
-    // Browser Type
-    public String browserType() {
-        String browser = properties.getProperty("browser");
-        if (browser != null) {
-            return browser;
-        } else {
-            throw new RuntimeException("Browser Not Specified in Config.Properties file");
-        }
-    }
+	// Helper method to load and set property values to constants
+	private void loadConfigProperty(String key, PropertySetter setter) {
+		String value = properties.getProperty(key);
+		if (value != null) {
+			setter.set(value);
+		} else {
+			throw new RuntimeException(key + " Not Specified in Config.Properties file");
+		}
+	}
 
-    // LMS Portal URL
-    public String getLmsPortalUrl() {
-        String url = properties.getProperty("lmsbaseurl");
-        if (url != null) {
-            return url;
-        } else {
-            throw new RuntimeException("lmsbaseurl Not Specified in Config.Properties file");
-        }
-    }
+	// Functional interface to set the property in constants
+	@FunctionalInterface
+	private interface PropertySetter {
+		void set(String value);
+	}
 }
