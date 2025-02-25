@@ -10,8 +10,9 @@ package com.utilities;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Test;
@@ -33,6 +34,7 @@ public class ExcelReader {
 
 	public static String LOGIN_POSITIVE_QUERY = "SELECT * FROM LOGIN WHERE TYPE='VALID'";
 	public static String LOGIN_NEGATIVE_QUERY = "SELECT * FROM LOGIN WHERE TYPE='INVALID'";
+	
 
 	public static String PROGRAM_POSITIVE_QUERY = "SELECT * FROM PROGRAM WHERE TYPE='VALID'";
 	public static String PROGRAM_NEGATIVE_QUERY = "SELECT * FROM  PROGRAM WHERE TYPE='INVALID'";
@@ -42,84 +44,98 @@ public class ExcelReader {
 
 	public static String CLASS_POSITIVE_QUERY = "SELECT * FROM CLASS WHERE TYPE='VALID'";
 	public static String CLASS_NEGATIVE_QUERY = "SELECT * FROM  CLASS WHERE TYPE='INVALID'";
+	
+	
 
-	// 3.Get test data from Excel file based on Module and TestCase type
-	public Map<String, String> getData(String TestCase_Type, String Module) throws FileNotFoundException, IOException {
+	
+	public Map<String, List<String>> getData(String TestCase_Type, String Module) throws FileNotFoundException, IOException {
+	    // Use a Map to store multiple values for each field (column)
+	    Map<String, List<String>> testData = new LinkedHashMap<>();
+	    try {
+	        connection = fillo.getConnection(EnvironmentConstants.EXCEL_FILE_PATH);
 
-		Map<String, String> testData = new LinkedHashMap<>();
-		try {
-			connection = fillo.getConnection(EnvironmentConstants.EXCEL_FILE_PATH);
+	        // Determine which query to execute based on Module and TestCase_Type
+	        switch (Module) {
+	            case "Login":
+	                if (TestCase_Type.equals("Positive")) {
+	                    recordset = connection.executeQuery(LOGIN_POSITIVE_QUERY);
+	                } else {
+	                    recordset = connection.executeQuery(LOGIN_NEGATIVE_QUERY);
+	                }
+	                break;
+	            case "Program":
+	                if (TestCase_Type.equals("Positive")) {
+	                    recordset = connection.executeQuery(PROGRAM_POSITIVE_QUERY);
+	                } else {
+	                    recordset = connection.executeQuery(PROGRAM_NEGATIVE_QUERY);
+	                }
+	                break;
+	            case "Batch":
+	                if (TestCase_Type.equals("Positive")) {
+	                    recordset = connection.executeQuery(BATCH_POSITIVE_QUERY);
+	                } else {
+	                    recordset = connection.executeQuery(BATCH_NEGATIVE_QUERY);
+	                }
+	                break;
+	            case "Class":
+	                if (TestCase_Type.equals("Positive")) {
+	                    recordset = connection.executeQuery(CLASS_POSITIVE_QUERY);
+	                } else {
+	                    recordset = connection.executeQuery(CLASS_NEGATIVE_QUERY);
+	                }
+	                break;
+	        }
 
-			switch (Module) {
-			case "Login":
-				if (TestCase_Type == "Positive") {
-					recordset = connection.executeQuery(LOGIN_POSITIVE_QUERY);
-				} else {
-					recordset = connection.executeQuery(LOGIN_NEGATIVE_QUERY);
-				}
-				break;
-			case "Program":
-				if (TestCase_Type == "Positive") {
+	        // Iterate over the rows of the recordset
+	        while (recordset.next()) {
+	            // Iterate over all fields (columns) for each row
+	            for (String field : recordset.getFieldNames()) {
+	                // Retrieve the field value
+	                String fieldValue = recordset.getField(field);
 
-					recordset = connection.executeQuery(PROGRAM_POSITIVE_QUERY);
+	                // If the field (column) already exists in the Map, add the value to the List
+	                if (!testData.containsKey(field)) {
+	                    testData.put(field, new ArrayList<>());
+	                }
+	                testData.get(field).add(fieldValue);  // Add the value to the list for this column
+	            }
+	        }
+	    } catch (FilloException exception) {
+	        exception.printStackTrace();
+	    } finally {
+	        if (connection != null) {
+	            connection.close();
+	        }
+	        if (recordset != null) {
+	            recordset.close();
+	        }
+	    }
 
-				} else {
-					recordset = connection.executeQuery(PROGRAM_NEGATIVE_QUERY);
-				}
-				break;
-			case "Batch":
-
-				if (TestCase_Type == "Positive") {
-					recordset = connection.executeQuery(BATCH_POSITIVE_QUERY);
-				} else {
-					recordset = connection.executeQuery(BATCH_NEGATIVE_QUERY);
-				}
-				break;
-			case "Class":
-				if (TestCase_Type == "Positive") {
-					recordset = connection.executeQuery(CLASS_POSITIVE_QUERY);
-				} else {
-					recordset = connection.executeQuery(CLASS_NEGATIVE_QUERY);
-				}
-				break;
-
-			}
-
-			while (recordset.next()) {
-
-				for (String field : recordset.getFieldNames()) {
-					testData.put(field, recordset.getField(field));
-				}
-
-			}
-		} catch (FilloException exception) {
-			exception.printStackTrace();
-		} finally {
-			if (connection != null) {
-				connection.close();
-			}
-			if (recordset != null) {
-				recordset.close();
-			}
-
-		}
-
-		return testData;
+	    return testData;
 	}
 
+	
+	
 	@Test
 	public void DataDrivenTesting() {
 
-		Map<String, String> testData;
+		Map<String, List<String>> testData;
 		try {
-			testData = getData("Negative", "Program");
+			
+			testData = getData("Positive", "Login");
+			String Firstusername = testData.get("USER").get(0);
+			String secondusername = testData.get("USER").get(1);
+			
+			String FirstPSWD = testData.get("PASSWORD").get(0);
+			String secondpswd = testData.get("PASSWORD").get(1);
+			
+		
+			System.out.println("First username testdata is " + Firstusername);
+			System.out.println("Second username testdata is " + secondusername);
+			
+			System.out.println("First PSWD testdata is " + FirstPSWD);
+			System.out.println("Second PSWD testdata is " + secondpswd);
 
-			// System.out.println("testdata is "+testData.get("USER"));
-			// System.out.println("testdata is "+testData.get("PASSWORD"));
-			System.out.println("testdata is " + testData.get("PROGRAM_NAME"));
-			// System.out.println("testdata is " + testData.get("BPROGRAM_NAME"));
-
-			// System.out.println("testdata is "+testData.get("CBATCH_NAME"));
 
 		} catch (IOException e) {
 

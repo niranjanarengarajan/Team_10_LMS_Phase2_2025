@@ -20,7 +20,7 @@ public class EnvironmentConstants {
 
 	public static String EXCEL_FILE_PATH = "./src/test/resources/TestData.xlsx";
 	public static String PROPERTIES_FILE_PATH = "./src/test/resources/Config/Config.properties";
-
+public static String GOOGLE_API_KEY="./src/test/resources/graphic-abbey-451818-g4-4d1a40a330d6.json";
 	
 	
 	public void setBrowserType(ThreadLocal<String> browserType) {
