@@ -1,32 +1,59 @@
-
 @ProgramAdd
 Feature: Admin creates new Program
-#Background:
-  
-Scenario: Admin gives the correct LMS portal URL
+ 
+Background:  Admin enters Program to create new program
+Given The Browser is open
+When Log into LMS Portal as Admin
+And admin clicks on "Program" in menubar
+Then admin clicks on "Add New Program" submenu
 
-Given Admin Gives the valid LMS portal URL
-And Admin is in login Page
-When Admin enter valid credentials  and clicks login button 
-Then Admin should land on Home  page
 
-  #@tag1
-  #Scenario: Title of your scenario
-    #Given I want to write a step with precondition
-    #And some other precondition
-    #When I complete action
-    #And some other action
-    #And yet another action
-    #Then I validate the outcomes
-    #And check more outcomes
-#
-  #@tag2
-  #Scenario Outline: Title of your scenario outline
-    #Given I want to write a step with <name>
-    #When I check for the <value> in step
-    #Then I verify the <status> in step
-#
-    #Examples: 
-      #| name  | value | status  |
-      #| name1 |     5 | success |
-      #| name2 |     7 | Fail    |
+@programDetails 
+Scenario: Verify title of the pop up window
+Then Admin should see window title as "Program Details"
+
+Scenario: Verify mandatory fields with red asterisk mark
+Then Admin should see red  asterisk mark  beside mandatory field "Name"
+
+@Negative
+Scenario: Verify empty form submission
+When Admin clicks save button without entering mandatory  
+Then Admin gets message <field> is required
+|Program name is required.|
+|Description is required.|
+|Status is required.|
+
+@Cancel
+Scenario: Verify cancel button
+When Admin clicks Cancel button
+Then Admin can see Program Details form disappears 
+
+@programName
+Scenario: Verify enter program name
+When Admin enters ProgramName in textbox 
+Then Admin can see text entered
+@progDesc
+Scenario: Verify enter description
+When Admin enters Description in textbox
+Then Admin can see text entered  
+@status
+Scenario: Verify select Status 
+When Admin selects status by clicking on radiobutton "(Active/InActive)"
+Then Admin can see 'Active/Inactive' status selected
+
+@validMandatory
+Scenario: Verify Admin is able to save the program 
+Given admin clicks on "Add New Program" submenu 
+When Admin enter valid details for mandatory fields and Click on save button
+Then Admin gets message 'Program Created Successfully'
+
+
+Scenario: Verify added Program is created 
+Given admin clicks on "Program" in menubar
+When Admin searches with newly created "Program Name"
+Then Records of the newly created  "Program Name" is displayed and match the data entered
+
+@xbutton
+Scenario: Verify close window with "X"  
+When Admin Click on "X" button
+Then Admin can see program details form disappear

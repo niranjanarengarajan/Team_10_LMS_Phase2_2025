@@ -39,10 +39,11 @@ public class DeleteMultipleClass {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    @Given("Admin gives the correct LMS portal URL")
-    public void admin_gives_the_correct_lms_portal_url() {
-        // Implement the logic to navigate to the LMS portal URL
-    }
+	/*
+	 * @Given("Admin gives the correct LMS portal URL") public void
+	 * admin_gives_the_correct_lms_portal_url() { // Implement the logic to navigate
+	 * to the LMS portal URL }
+	 */
 
     @When("Admin enters valid data in all fields and clicks the login button")
     public void admin_enters_valid_data_in_all_fields_and_clicks_the_login_button() {

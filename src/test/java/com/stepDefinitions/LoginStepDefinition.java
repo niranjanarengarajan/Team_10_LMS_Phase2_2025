@@ -14,6 +14,7 @@ import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import net.sourceforge.tess4j.TesseractException;
 
 
 public class LoginStepDefinition {
@@ -95,19 +96,19 @@ public class LoginStepDefinition {
 	// 6
 
 	@Then("Admin should see  LMS - Learning Management System")
-	public void admin_should_see_lms_learning_management_system() throws FileNotFoundException, IOException {
+	public void admin_should_see_lms_learning_management_system() throws FileNotFoundException, IOException, TesseractException {
 		String text = login.extractTextFromImg();
 		System.out.println("text from OCR" +text);
-		boolean result=login.validateImgText(text);
+		boolean result=login.appicationNameValidation("LMS - Learning Management System", true);
 		Assert.assertTrue(result);
 	}
 
 	// 7
 
 	@Then("Admin should see company name below the app name")
-	public void admin_should_see_company_name_below_the_app_name() throws IOException {
+	public void admin_should_see_company_name_below_the_app_name() throws IOException, TesseractException {
 		String text = login.extractTextFromImg();
-		Assert.assertTrue(login.appImageNameIndexValidation(text));
+		Assert.assertTrue(login.appicationNameValidation("LMS - Learning Management System", true));
 	}
 
 	// 8

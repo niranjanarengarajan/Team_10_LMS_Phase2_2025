@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
+
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -35,8 +36,11 @@ import com.google.gson.JsonParser;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.constants.EnvironmentConstants;
 import com.driverManager.DriverFactory;
-
+import org.openqa.selenium.io.FileHandler;
 import com.utilities.ExcelReader;
+
+import net.sourceforge.tess4j.Tesseract;
+import net.sourceforge.tess4j.TesseractException;
 
 public class LoginPage {
 
@@ -178,6 +182,9 @@ public class LoginPage {
 
 	@CacheLookup
 	private WebElement APP_INPUT_FIELD;
+	
+	 @FindBy(xpath="//img")
+	 WebElement DashboardImage;
 
 	public String HOMEPAGE_URL = "https://feb-ui-hackathon-bbfd38d67ea9.herokuapp.com/";
 	public String LOGINPAGE_URL = "https://feb-ui-hackathon-bbfd38d67ea9.herokuapp.com/login";
@@ -427,6 +434,51 @@ public class LoginPage {
 		return null;
 	}
 
+	
+	public boolean appicationNameValidation(String ExpText,boolean order) throws TesseractException, IOException 
+	{
+		
+		    
+        
+        // Take a screenshot of the image
+        File imageFile = DashboardImage.getScreenshotAs(OutputType.FILE);
+        File tempFile = new File("temp_image.png");
+        FileHandler.copy(imageFile, tempFile);         
+
+        // Initialize Tesseract
+        
+        Tesseract tesseract = new Tesseract();
+        tesseract.setDatapath("C://Program Files//Tesseract-OCR//tessdata"); 
+        tesseract.setLanguage("eng"); 
+
+        // Extract text from the image
+        String extractedText = tesseract.doOCR(tempFile);      
+    	        if(order) {        	
+        	int LMSIndex = extractedText.indexOf("LMS");
+        	int NumpytIndex = extractedText.indexOf("Numpy");
+        
+        	if(ExpText.contains("LMS") && LMSIndex <NumpytIndex) {
+            	
+            	return true;
+        	}else if(ExpText.contains("Numpy") && NumpytIndex > LMSIndex) {
+        		System.out.println("Numpy is after LMS"); 
+            	return true;
+        	}
+        	
+        }else {
+        	if(extractedText.contains(ExpText)) 
+            	return true;
+            else
+            	return false;               
+        }
+        return false;
+	}
+		
+	
+	
+	
+	
+	
 	public boolean validateImgText(String string) throws FileNotFoundException, IOException {
 		System.out.println("I entered OCR page");
 		readlogindata();
@@ -599,19 +651,29 @@ public class LoginPage {
 
 	}
 
-	public void login_UsingmouseActions()
-
-	{
-		Actions actions = new Actions(ldriver);
-		actions
-		.moveToElement(USER_FIELD).click().sendKeys(constants.getUsername())
-.moveToElement(PASSWORD_FIELD).click().sendKeys(constants.getPassword())
-.moveToElement(SELECT_ROLE).click()
-.moveToElement(ADMIN_ROLE_FIELD).click()
-.moveToElement(LOGIN_BTN).click()
-.build().perform();
-		;
-
+	public void login_UsingmouseActions() {
+	    WebDriverWait wait = new WebDriverWait(ldriver, Duration.ofSeconds(10));
+	    
+	    try {
+	        // Wait for the username field to be visible and click it
+	        wait.until(ExpectedConditions.elementToBeClickable(USER_FIELD));
+	        Actions actions = new Actions(ldriver);
+	        actions.moveToElement(USER_FIELD).click().sendKeys(constants.getUsername())
+	            // Wait for password field to be clickable
+	            .moveToElement(PASSWORD_FIELD).click().sendKeys(constants.getPassword());
+	        wait.until(ExpectedConditions.elementToBeClickable(SELECT_ROLE));
+	            // Wait for role selection to be clickable
+	        actions  .moveToElement(SELECT_ROLE).click();
+	            // Wait for admin role field to be clickable
+	        wait.until(ExpectedConditions.elementToBeClickable(ADMIN_ROLE_FIELD));
+	        actions .moveToElement(ADMIN_ROLE_FIELD).click();
+	        wait.until(ExpectedConditions.elementToBeClickable(LOGIN_BTN));
+	            // Wait for login button to be clickable and click it
+	        actions  .moveToElement(LOGIN_BTN).click()
+	            .build().perform();
+	    } catch (Exception e) {
+	        System.out.println("Error during mouse actions: " + e.getMessage());
+	    }
 	}
 
 	public void loginUsingUsername() {
