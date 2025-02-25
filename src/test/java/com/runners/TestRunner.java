@@ -13,8 +13,8 @@ import io.cucumber.testng.CucumberOptions;
 				"rerun:failed_scenarios/failed_scenarios.txt",
 
 				"com.aventstack.chaintest.plugins.ChainTestCucumberListener:",
-				"html:target/cucumber-reports/reports.html", "html:test-output/index.html",
-				"com.aventstack.extentreports.cucumber.adapter.ExtentCucumberAdapter:",
+				"html:target/cucumber-reports/reports.html", 
+				
 				"io.qameta.allure.cucumber7jvm.AllureCucumber7Jvm"}, publish = true)
 public class TestRunner extends AbstractTestNGCucumberTests {
 
