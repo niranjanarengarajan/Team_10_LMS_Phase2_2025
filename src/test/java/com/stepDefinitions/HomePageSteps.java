@@ -46,10 +46,10 @@ public class HomePageSteps {
 		loginPage = new LoginPage(driver);
 	}
 
-	@Given("Admin is on login Page")
-	public void admin_is_on_login_page() {
-		LoggerLoad.logInfo("Admin is on the login page");
-	}
+	/*
+	 * @Given("Admin is on login Page") public void admin_is_on_login_page() {
+	 * LoggerLoad.logInfo("Admin is on the login page"); }
+	 */
 
 	@When("Admin enters valid data in all field and  clicks login button")
 	public void admin_enters_valid_data_in_all_field_and_clicks_login_button() {
