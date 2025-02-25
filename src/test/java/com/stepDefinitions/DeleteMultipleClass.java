@@ -1,4 +1,4 @@
-package com.stepdefinitions;
+package com.stepDefinitions;
 
 import java.time.Duration;
 import java.util.Arrays;
